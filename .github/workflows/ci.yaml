@@ -1,25 +1,25 @@
 name: CI
 
-on:
-  push:
-    branches: [master, v0.*]
-  pull_request:
-    branches: master
-  schedule:
-    - cron:  '0 6 * * 1,4' # Each Monday and Thursday at 06:00 UTC
-  workflow_dispatch:
+on: push
 
 permissions:
   contents: read
 
 env:
-  NB_KERNEL: python
   MPLBACKEND: Agg
+  NB_KERNEL: python
+  PIP_INDEX_URL: http://localhost:8629/2023-12-09
   SEABORN_DATA: ${{ github.workspace }}/seaborn-data
+  UV_INDEX_URL: http://localhost:8629/2023-12-09
 
 jobs:
   build-docs:
     runs-on: ubuntu-latest
+    services:
+      pypi_wayback:
+        image: ghcr.io/waleko/pypi-wayback
+        ports:
+          - 8629:8080
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
@@ -53,6 +53,11 @@ jobs:
 
   run-tests:
     runs-on: ubuntu-latest
+    services:
+      pypi_wayback:
+        image: ghcr.io/waleko/pypi-wayback
+        ports:
+          - 8629:8080
 
     strategy:
       matrix:
@@ -93,6 +98,11 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+    services:
+      pypi_wayback:
+        image: ghcr.io/waleko/pypi-wayback
+        ports:
+          - 8629:8080
     strategy:
       fail-fast: false
     steps:
