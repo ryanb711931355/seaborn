@@ -1812,7 +1812,7 @@ class Plotter:
             set_layout_engine(self._figure, "tight")
 
         if (extent := p._layout_spec.get("extent")) is not None:
-            engine = get_layout_engine(self._figure)
+            engine = self._figure.get_layout_engine()
             if engine is None:
                 self._figure.subplots_adjust(*extent)
             else:
