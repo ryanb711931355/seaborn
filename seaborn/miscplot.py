@@ -35,7 +35,7 @@ def dogplot(*_, **__):
     from urllib.request import urlopen
     from io import BytesIO
 
-    url = "https://github.com/mwaskom/seaborn-data/raw/master/png/img{}.png"
+    url = "https://raw.githubusercontent.com/mwaskom/seaborn-data/master/png/img{}.png"
     pic = np.random.randint(2, 7)
     data = BytesIO(urlopen(url.format(pic)).read())
     img = plt.imread(data)
