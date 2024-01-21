@@ -27,7 +27,6 @@ class TestPalPlot:
 
 class TestDogPlot:
 
-    @_network(url="https://github.com/mwaskom/seaborn-data")
     def test_dogplot(self):
         misc.dogplot()
         ax = plt.gca()

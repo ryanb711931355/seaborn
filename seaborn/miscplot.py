@@ -32,14 +32,10 @@ def palplot(pal, size=1):
 
 def dogplot(*_, **__):
     """Who's a good boy?"""
-    from urllib.request import urlopen
-    from io import BytesIO
+    import numpy as np
+    import matplotlib.pyplot as plt
 
-    url = "https://github.com/mwaskom/seaborn-data/raw/master/png/img{}.png"
-    pic = np.random.randint(2, 7)
-    data = BytesIO(urlopen(url.format(pic)).read())
-    img = plt.imread(data)
     f, ax = plt.subplots(figsize=(5, 5), dpi=100)
     f.subplots_adjust(0, 0, 1, 1)
-    ax.imshow(img)
+    ax.imshow(np.random.rand(100, 100, 3))
     ax.set_axis_off()
