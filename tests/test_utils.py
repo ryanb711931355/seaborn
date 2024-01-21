@@ -59,7 +59,13 @@ def _network(t=None, url="https://github.com"):
             pytest.skip("No internet connection")
         else:
             f.close()
-            return t(*args, **kwargs)
+            # urllib.error.HTTPError and URLError are subclasses of OSError,
+            # so this also covers rate limiting (HTTP 429) and other transient
+            # failures of the remote resource during the test itself.
+            try:
+                return t(*args, **kwargs)
+            except (OSError, HTTPException) as err:
+                pytest.skip(f"Remote resource unavailable: {err}")
     return wrapper
 
 

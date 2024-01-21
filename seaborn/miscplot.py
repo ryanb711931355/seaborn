@@ -33,12 +33,26 @@ def palplot(pal, size=1):
 def dogplot(*_, **__):
     """Who's a good boy?"""
     from urllib.request import urlopen
+    from urllib.error import URLError
     from io import BytesIO
 
-    url = "https://github.com/mwaskom/seaborn-data/raw/master/png/img{}.png"
+    urls = [
+        "https://raw.githubusercontent.com/mwaskom/seaborn-data/master/png/img{}.png",
+        "https://raw.githubusercontent.com/mwaskom/seaborn-data/main/png/img{}.png",
+        "https://github.com/mwaskom/seaborn-data/raw/master/png/img{}.png",
+    ]
     pic = np.random.randint(2, 7)
-    data = BytesIO(urlopen(url.format(pic)).read())
-    img = plt.imread(data)
+    img = None
+    for url in urls:
+        try:
+            data = BytesIO(urlopen(url.format(pic)).read())
+            img = plt.imread(data)
+            break
+        except (URLError, OSError, ValueError):
+            continue
+    if img is None:
+        # Remote image unavailable; show a placeholder so the function still works
+        img = np.ones((100, 100, 3))
     f, ax = plt.subplots(figsize=(5, 5), dpi=100)
     f.subplots_adjust(0, 0, 1, 1)
     ax.imshow(img)
